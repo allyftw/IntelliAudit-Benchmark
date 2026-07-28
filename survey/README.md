@@ -15,7 +15,7 @@ the study survey (`condition = balanced_v1`) on 2026-07-28.
 - **Test accounts removed** — all roster `org=Test` accounts and team identities; no researcher self-ratings.
 - **De-identified** — no names or emails. Each respondent is a stable anonymized id: `A###` (auditor) / `S###` (student).
 - **Main study only** — the deadline ablation is not included.
-- **Controls 8.1 / 8.4 in O1**: the source evidence was converted from PNG to XLSX (`8-1_O1_Okta_User_List`, `8-4_O1_Code_Repo_Access_List`) and the ratings are retained; these rows are tagged `modality = xlsx`. The ratings were collected on the original O1 presentation.
+- **Evidence modality is reported as served.** Controls 8.1 / 8.4 in **O1** were served as images (PNG access-list screenshots: `8-1_O1_Okta_User_List`, `8-4_O1_Code_Repo_Access_List`) and are tagged `modality = image`. On these image cases the deployed pipeline produced a skip / `INSUFFICIENT_EVIDENCE` output (it did not extract the tabular content from the image); the retained ratings are evaluations of that output. This is a genuine modality-robustness result and is left intact — the images are **not** transcribed to spreadsheets, because doing so would change the task these cases measure (reading an image) and mask the limitation.
 
 ## Columns (`survey_values_responses.csv`)
 
@@ -26,7 +26,7 @@ the study survey (`condition = balanced_v1`) on 2026-07-28.
 | `study_org` | `o1`–`o4` |
 | `control_id` | ISO 27001 control (e.g., `5.9`, `8.4`) |
 | `case_id` | Control × org (e.g., `8.4-o2`) |
-| `modality` | Primary evidence type (`pdf`, `docx`, `xlsx`, `txt`) |
+| `modality` | Primary evidence type as served (`pdf`, `docx`, `xlsx`, `txt`, `image`) |
 | `ground_truth_status` | Reference status where defined (`Unknown` when not fixed) |
 | `llm_status` | System-produced status (`COMPLIANT` / `PARTIAL` / `NON_COMPLIANT` / `INSUFFICIENT_EVIDENCE`) |
 | `rq1_understanding` | RQ1 — control understanding (1–5) *(auditors)* |
@@ -43,4 +43,4 @@ the study survey (`condition = balanced_v1`) on 2026-07-28.
 
 Pooled means: RQ1 understanding 3.90 (SD 0.86, n=166); RQ2 factual 3.72 (SD 1.08, n=163); RQ2 fulfils 3.05 (SD 1.37, n=163); RQ4 identified 3.66 (SD 1.14, n=298); RQ4 remediate 3.84 (SD 1.10, n=296).
 
-> Note: because 8.1/8.4 O1 are included here (full-release cut), per-control 8.1/8.4 values computed from this file include O1 and will differ from the paper's rating tables, which restrict 8.1/8.4 to O2–O4.
+> Note: the paper's rating tables restrict 8.1/8.4 to O2–O4 (O1 was the image-skip case). This file retains the O1 8.1/8.4 rows as image cases, so per-control 8.1/8.4 values computed here include O1 and will differ from the paper's tables.
