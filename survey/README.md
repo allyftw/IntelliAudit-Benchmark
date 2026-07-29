@@ -1,46 +1,25 @@
-# IntelliAudit — human survey values
+# IntelliAudit — human survey data (de-identified)
 
-Companion human-evaluation data for the IntelliAudit benchmark. Generated from
-the study survey (`condition = balanced_v1`) on 2026-07-28.
+Response-level human-evaluation data for the IntelliAudit benchmark, from the
+finalized survey export (frozen 2026-07-29), de-identified for release.
 
-## Files
+## File
 
-| File | What it is |
-|---|---|
-| `survey_values_responses.csv` | One row per (respondent × case). |
-| `survey_values_per_control.csv` | Aggregate: mean / SD / n per control × survey dimension. |
+`survey_case_responses_deidentified.csv` — one row per (respondent × case).
 
 ## Cleaning
 
-- **Test accounts removed** — all roster `org=Test` accounts and team identities; no researcher self-ratings.
-- **De-identified** — no names or emails. Each respondent is a stable anonymized id: `A###` (auditor) / `S###` (student).
-- **Main study only** — the deadline ablation is not included.
-- **Evidence modality is reported as served.** Controls 8.1 / 8.4 in **O1** were served as images (PNG access-list screenshots: `8-1_O1_Okta_User_List`, `8-4_O1_Code_Repo_Access_List`) and are tagged `modality = image`. On these image cases the deployed pipeline produced a skip / `INSUFFICIENT_EVIDENCE` output (it did not extract the tabular content from the image); the retained ratings are evaluations of that output. This is a genuine modality-robustness result and is left intact — the images are **not** transcribed to spreadsheets, because doing so would change the task these cases measure (reading an image) and mask the limitation.
+- **Test accounts removed** — roster `org=Test` accounts, team identities, and team members who used personal/roster accounts (including a team test account whose roster org was a real institution).
+- **De-identified** — dropped `participant_name`, `participant_email`, self-reported employer org, and the raw `background_json` / `answers_json` blobs. Each respondent is a stable anonymized id (`A###` auditor / `S###` student). Verified: 0 emails, 0 participant names in the released file.
+- **Main study only** — condition `balanced_v1`; the deadline ablation is not included.
+- **Free-text comments retained** (`rq*_what_was_missed`, `rq4_remediation_blocker`, `judge_followup_turns`) — these are participant audit reasoning; scanned and contain no direct identifiers (names/emails).
 
-## Columns (`survey_values_responses.csv`)
+## Columns
 
-| Column | Meaning |
-|---|---|
-| `respondent_id` | Anonymized respondent (`A###` auditor, `S###` student) |
-| `role` | `auditor` or `student` |
-| `study_org` | `o1`–`o4` |
-| `control_id` | ISO 27001 control (e.g., `5.9`, `8.4`) |
-| `case_id` | Control × org (e.g., `8.4-o2`) |
-| `modality` | Primary evidence type as served (`pdf`, `docx`, `xlsx`, `txt`, `image`) |
-| `ground_truth_status` | Reference status where defined (`Unknown` when not fixed) |
-| `llm_status` | System-produced status (`COMPLIANT` / `PARTIAL` / `NON_COMPLIANT` / `INSUFFICIENT_EVIDENCE`) |
-| `rq1_understanding` | RQ1 — control understanding (1–5) *(auditors)* |
-| `rq2_factual` | RQ2 — factual/accurate evidence evaluation (1–5) *(auditors)* |
-| `rq2_fulfils` | RQ2 — evidence fulfils the control (1–5) *(auditors)* |
-| `rq4_identified` | RQ4 — correctly identified issues (1–5) *(students)* |
-| `rq4_remediate` | RQ4 — could remediate / explain (1–5) *(students)* |
+`respondent_id`, `study_org` (o1–o4, from `case_id`), `participant_role`, `participant_group`, `case_id`, `control_id`, `condition`, `modality`, `evidence_name`, `ground_truth_label`, `ground_truth_status`, `llm_status`, `rq1_understands_control`, `rq1_what_was_missed`, `rq2_factual_evaluation`, `rq2_what_was_missed`, `rq2_evidence_fulfils`, `rq4_correctly_identified`, `rq4_could_remediate`, `rq4_remediation_blocker`, `judge_followup_turns`, `judge_changed_status`, `judge_updated_status`, `created_at`, `updated_at`, `participant_completed_at`.
 
-**Likert scale:** Disagree=1, Somewhat Agree=2, Neutral=3, Agree=4, Strongly Agree=5. Blank = not applicable to that role or not answered.
+**Likert values:** Disagree, Somewhat Agree, Neutral, Agree, Strongly Agree (map to 1–5). Blank = not applicable to that role / not answered.
 
 ## Coverage
 
-467 responses · 48 cases · 12 controls · 48 respondents (17 auditors, 31 students).
-
-Pooled means: RQ1 understanding 3.90 (SD 0.86, n=166); RQ2 factual 3.72 (SD 1.08, n=163); RQ2 fulfils 3.05 (SD 1.37, n=163); RQ4 identified 3.66 (SD 1.14, n=298); RQ4 remediate 3.84 (SD 1.10, n=296).
-
-> Note: the paper's rating tables restrict 8.1/8.4 to O2–O4 (O1 was the image-skip case). This file retains the O1 8.1/8.4 rows as image cases, so per-control 8.1/8.4 values computed here include O1 and will differ from the paper's tables.
+479 responses · 49 respondents (18 auditors, 31 students).
